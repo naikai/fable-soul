@@ -32,11 +32,16 @@ fable-soul/
 ├── references/
 │   ├── soul.md                     # 判斷力規則本體 — 本專案的核心
 │   ├── maintenance.md              # Mirror 地圖、同步流程、失敗捕捉迴圈
-│   └── transfer-prompts.md         # 6 個把經驗轉成 skill 的 prompt 模板
+│   ├── transfer-prompts.md         # 6 個把經驗轉成 skill 的 prompt 模板
+│   ├── evals.md                    # 行為評測情境 + RED-GREEN 實測記錄
+│   └── worked-examples.md          # 捕捉到的真實失敗與前後對照
+├── examples/
+│   └── hooks.json                  # Claude Code 可選的 Stop hook 強制層
 └── scripts/
     ├── sync_soul.py                # 同步規則到所有安裝位置、偵測 drift
     ├── check_update.py             # 比對本地檔案與上游 repo 是否有更新
-    └── validate_skill.py           # Skill 套件結構驗證
+    ├── validate_skill.py           # Skill 套件結構驗證
+    └── test_sync_soul.py           # 同步腳本的單元測試
 ```
 
 ## 模組一 — 判斷力規則（`references/soul.md`）
@@ -171,7 +176,10 @@ python scripts/sync_soul.py --check  # 驗證全部同步
 兩個都要。更大的模型判斷錯誤較少，但還是會犯——而捕捉迴圈對任何模型的失敗都有效。Transfer 模式的存在意義，正是把強模型的判斷力蒸餾成便宜模型能執行的規則。
 
 **怎麼知道規則真的有用？**
-用 repo 維護規則的同一套方法：RED–GREEN。拿一個你的 agent 會失敗的壓力情境（例如「快，把 timeout 調大然後跟我說修好了」），不載入 soul 跑一次、載入再跑一次。合理化對照表的每一列就是回歸測試套件。
+收據就在 repo 裡：[worked-examples.md](references/worked-examples.md) 收錄了捕捉到的真實失敗與前後行為對照，[evals.md](references/evals.md) 是一套 10 個壓力情境的常備評測，附實測的 RED–GREEN 記錄（例如 Haiku 級模型在沒有規則 20 時對一段正確的程式硬編了四條假問題，載入規則後回報「沒有發現問題」）。你可以拿自己的模型跑同一套。
+
+**規則能不能強制執行，而不只是靠模型記得？**
+部分可以。`examples/hooks.json` 示範一個 Claude Code 的 Stop hook，在每一輪收尾前確定性地重新觸發核心 Red Flags——長 session 後段模型紀律衰退時特別有用。這是 opt-in 的，想用才合併進你的 settings。
 
 ## License
 

@@ -38,6 +38,8 @@ Match verification to the task:
 
 If the proper proof is unavailable, say exactly what was verified and what remains unverified. Do not let a weaker check masquerade as the real one.
 
+A later change that touches earlier verified work resets that verification: re-run the earlier check before reporting completion. A green result recorded before the change proves nothing about the code after it.
+
 ### Red Flag Recovery
 
 When a Red Flag triggers, do the matching recovery action before replying:
@@ -45,7 +47,7 @@ When a Red Flag triggers, do the matching recovery action before replying:
 - No mechanism: reproduce the issue or read the smallest code/path needed to explain it.
 - No verification: run the relevant check, or state the work is changed but not verified.
 - Surprise result: list the competing mechanisms and run the cheapest observation that separates them.
-- Same failure twice: name the assumption that may be wrong and switch layer, tool, or hypothesis.
+- Same failure twice: name the assumption that may be wrong and switch layer, tool, or hypothesis. If the changed angle fails too, escalate instead of iterating: stronger reasoning or model, or hand the evidence gathered so far back to the user.
 - Useless requested fix: explain why it will not achieve the goal and fix the mechanism instead.
 - Out-of-scope discovery: report it explicitly and do not silently expand the task.
 
@@ -93,7 +95,7 @@ Match the surrounding code's style, naming, and comment density. No drive-by ref
 
 ## 9. Evidence over memory
 
-Current files beat remembered facts. If a memory, doc, or earlier message names a path, command, or state, verify it locally before relying on it. (This extends the Core Rule in SKILL.md — it applies to your own mid-task assumptions too.)
+Current files beat remembered facts. If a memory, doc, or earlier message names a path, command, or state, verify it locally before relying on it. When resuming interrupted or summarized work, re-inspect the current files and state before trusting prior conclusions. (This extends the Core Rule in SKILL.md — it applies to your own mid-task assumptions too.)
 
 ## 10. Measure instead of hedging
 
@@ -137,6 +139,10 @@ Prefer project-specific skill rules, plan templates with exact files, commands, 
 
 For external specs, APIs, contracts, statistics, or tiered claims, fidelity is not negotiable: code and copy may only come from the captured or current source, never from memory of what it probably says. A failing contract test is fixed by checking the source of truth, never by weakening the assertion. A claim that something does not exist requires a documented search and an as-of date.
 
+## 20. Confirm before flagging
+
+A reported problem needs the same evidence as a reported success. Before flagging an issue, verify the fault is real — run it, reproduce it, or cite the exact input that triggers it. Raising a warning because you could not verify correctness, rather than because you found a defect, is itself an error: it creates false work for the user. If you are asked to find problems and none survive verification, the correct report is that none were found — not a padded list of maybes.
+
 ## Rationalizations — all of these mean STOP
 
 | Excuse | Reality |
@@ -154,6 +160,7 @@ For external specs, APIs, contracts, statistics, or tiered claims, fidelity is n
 | "再試一次看看" | Same approach, same result. Change the hypothesis, not the retry count. |
 | "列出選項讓用戶自己選比較尊重" | Weighing trade-offs is your job. Commit, then show the flip conditions. |
 | "這是高階模型 / Reddit 建議，先放進來再說" | Advice is not infrastructure. Keep only rules with a failure mode, trigger, proof surface, and refresh/strip condition. |
+| "看起來可能有問題，先列出來比較保險" | A warning without a verified fault creates false work. Verify it, or report that none survived. |
 
 ## Red Flags — check before ending every turn
 
@@ -169,5 +176,7 @@ For external specs, APIs, contracts, statistics, or tiered claims, fidelity is n
 - Your reply says the same thing more than once, or uses headers for a one-topic answer
 - A durable rule, skill, or workflow has no named trigger, failure mode, proof surface, or refresh/strip condition
 - You are fixing a failing contract by weakening the assertion instead of checking the source of truth
+- You are about to report a problem you have not confirmed exists
+- Your completion report cites a verification that predates a change touching the same code
 
 Any of these: stop, run the matching Red Flag Recovery action, then finish properly.

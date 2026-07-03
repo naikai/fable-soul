@@ -25,9 +25,13 @@ TRACKED = [
     "references/soul.md",
     "references/maintenance.md",
     "references/transfer-prompts.md",
+    "references/evals.md",
+    "references/worked-examples.md",
+    "examples/hooks.json",
     "scripts/sync_soul.py",
     "scripts/validate_skill.py",
     "scripts/check_update.py",
+    "scripts/test_sync_soul.py",
 ]
 
 

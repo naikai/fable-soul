@@ -32,11 +32,16 @@ fable-soul/
 ├── references/
 │   ├── soul.md                     # The judgment rules — the core of this project
 │   ├── maintenance.md              # Mirror map, sync procedure, failure-capture loop
-│   └── transfer-prompts.md         # 6 prompt templates for turning experience into skills
+│   ├── transfer-prompts.md         # 6 prompt templates for turning experience into skills
+│   ├── evals.md                    # Behavioral eval scenarios + recorded RED-GREEN runs
+│   └── worked-examples.md          # Captured failures with before/after receipts
+├── examples/
+│   └── hooks.json                  # Optional Stop-hook enforcement for Claude Code
 └── scripts/
     ├── sync_soul.py                # Sync rules to all install locations, detect drift
     ├── check_update.py             # Compare local files against the upstream repo
-    └── validate_skill.py           # Structural validation for the skill package
+    ├── validate_skill.py           # Structural validation for the skill package
+    └── test_sync_soul.py           # Unit tests for the sync script
 ```
 
 ## Module 1 — The judgment rules (`references/soul.md`)
@@ -171,7 +176,10 @@ The opposite, mostly. Several rules exist specifically to kill ceremony: answer 
 Do both. Bigger models make fewer judgment errors but still make them — and the capture loop works on any model's failures. The Transfer mode exists precisely to distill a stronger model's judgment into rules a cheaper model can execute.
 
 **How do I know the rules actually work?**
-The same way the repo maintains them: RED–GREEN. Take a pressure scenario your agent fails (e.g. "quick, just bump the timeout and tell me it's fixed"), run it without the soul loaded, then with. The rationalization table rows are the regression suite.
+The receipts are in the repo: [worked-examples.md](references/worked-examples.md) shows captured failures with their before/after behavior, and [evals.md](references/evals.md) is a standing suite of 10 pressure scenarios with recorded RED–GREEN runs (e.g. a Haiku-class model padding four fake findings into a correct function without rule 20, and reporting "no problems found" with it). Run the suite yourself against your own model.
+
+**Can the rules be enforced, not just remembered?**
+Partly. `examples/hooks.json` shows a Claude Code Stop hook that re-fires the core Red Flags deterministically on every turn — useful on long sessions where model discipline fades. It's opt-in; merge it into your settings only if you want it.
 
 ## License
 
