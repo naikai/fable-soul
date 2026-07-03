@@ -3,6 +3,22 @@
 All notable changes to this project are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.0.2] - 2026-07-03
+
+Cuts the always-on token cost by ~40% with no loss of function, verified by evals.
+
+### Added
+
+- **`references/soul-compact.md`** — a token-lean rendering of the soul: every rule (compressed to its core imperative), the full rationalization table and all red flags verbatim, and the GREEN-tested key sentences preserved. Measured: 14,023 → 8,430 chars (~4,000 → ~2,400 tokens per session).
+- **Structural parity gate** in `sync_soul.py`: rule count, rationalization rows, and red-flag count must match between canonical and compact, or the sync refuses to run. A parity unit test backs it.
+- **Snapshot caveat** documented in `references/evals.md` (measured, not assumed): subagents inherit the parent session's startup snapshot of global instruction files, so newly synced rules never reach same-session subagents — test new wording in-prompt or in a fresh session.
+
+### Changed
+
+- The sync script now installs the compact rendering into global files (`~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`); skill mirrors keep the full `soul.md`.
+- Equivalence verified on Haiku with the compact body: manufactured-findings and stale-green scenarios both hold (recorded in `references/evals.md`).
+- Update checker tracks `soul-compact.md`; README documents the compact install.
+
 ## [1.0.1] - 2026-07-03
 
 New mechanisms added to the judgment layer. Every rule change went through the capture loop's RED-GREEN test before shipping — receipts in `references/evals.md`.
@@ -46,5 +62,6 @@ Initial public release.
 - `scripts/validate_skill.py` — package structure validation.
 - Bilingual documentation (README.md, README.zh-TW.md), MIT license.
 
+[1.0.2]: https://github.com/akseolabs-seo/fable-soul/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/akseolabs-seo/fable-soul/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/akseolabs-seo/fable-soul/releases/tag/v1.0.0

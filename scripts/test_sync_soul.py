@@ -35,6 +35,11 @@ class SyncSoulTests(unittest.TestCase):
         body = sync_soul.soul_body()
         self.assertTrue(body.startswith(sync_soul.BODY_MARKER))
 
+    def test_compact_parity_with_canonical(self) -> None:
+        if not hasattr(sync_soul, "parity_errors"):
+            self.skipTest("this copy has no compact rendering")
+        self.assertEqual(sync_soul.parity_errors(), [])
+
     def test_generates_missing_global_file(self) -> None:
         sync_soul.main()
         content = self.target.read_text(encoding="utf-8")

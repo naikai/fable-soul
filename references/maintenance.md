@@ -8,10 +8,10 @@ Canonical: `references/soul.md` in this repo.
 |--------|---------------------|---------|
 | `~/.claude/skills/fable-soul/` | Claude Code Skill tool | full skill copy |
 | `~/.codex/skills/fable-soul/` | Codex skill loader | full skill copy |
-| `~/.claude/CLAUDE.md` | Claude Code, every session | soul body + global header |
-| `~/.codex/AGENTS.md` | Codex, every session | soul body + global header |
+| `~/.claude/CLAUDE.md` | Claude Code, every session | compact soul body + global header |
+| `~/.codex/AGENTS.md` | Codex, every session | compact soul body + global header |
 
-The global files share the soul body verbatim from the line `**Violating the letter...**` onward; only the intro header differs. The sync script regenerates them from canonical — never hand-edit a mirror.
+The global files carry the **compact rendering** (`references/soul-compact.md`) from the line `**Violating the letter...**` onward; only the intro header differs. The compact version keeps every rule, the full rationalization table, and all red flags, but compresses rule prose to its core imperative — roughly 40% fewer tokens per session, equivalence verified against the eval scenarios. Skill mirrors carry the full `soul.md`. The sync script enforces structural parity (rule count, table rows, red-flag count) between canonical and compact and refuses to sync on mismatch. Edit canonical first, mirror the change into soul-compact.md, then sync — never hand-edit a mirror.
 
 ## Sync Procedure
 

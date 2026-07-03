@@ -24,6 +24,7 @@ TRACKED = [
     "SKILL.md",
     "CHANGELOG.md",
     "references/soul.md",
+    "references/soul-compact.md",
     "references/maintenance.md",
     "references/transfer-prompts.md",
     "references/evals.md",

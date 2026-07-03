@@ -13,6 +13,9 @@ from pathlib import Path
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 CANONICAL = SKILL_ROOT / "references" / "soul.md"
+# Global files get the compact rendering (same rules, table, and red flags;
+# mechanisms and examples live only in canonical). Parity is checked below.
+COMPACT = SKILL_ROOT / "references" / "soul-compact.md"
 HOME = Path.home()
 
 SKILL_MIRRORS = [
@@ -40,11 +43,44 @@ GLOBAL_TARGETS = {
 
 
 def soul_body() -> str:
-    text = CANONICAL.read_text(encoding="utf-8")
+    text = COMPACT.read_text(encoding="utf-8")
     idx = text.find(BODY_MARKER)
     if idx == -1:
-        sys.exit(f"FAIL: body marker {BODY_MARKER!r} not found in {CANONICAL}")
+        sys.exit(f"FAIL: body marker {BODY_MARKER!r} not found in {COMPACT}")
     return text[idx:]
+
+
+def parity_errors() -> list[str]:
+    """Structural parity between canonical and compact: same rule count,
+    same rationalization rows, same red flags. Compact may compress prose,
+    never drop triggers."""
+    import re
+
+    canon = CANONICAL.read_text(encoding="utf-8")
+    compact = COMPACT.read_text(encoding="utf-8")
+    errors: list[str] = []
+
+    canon_rules = len(re.findall(r"^## \d+\.", canon, re.M))
+    compact_rules = len(re.findall(r"^\d+\. \*\*", compact, re.M))
+    if canon_rules != compact_rules:
+        errors.append(f"rule count differs: canonical {canon_rules} vs compact {compact_rules}")
+
+    for name, text_ in (("canonical", canon), ("compact", compact)):
+        if "## Rationalizations" not in text_ or "## Red Flags" not in text_:
+            errors.append(f"{name}: missing Rationalizations or Red Flags section")
+
+    def rows(text_: str) -> int:
+        return len(re.findall(r'^\| "', text_, re.M))
+
+    def flags(text_: str) -> int:
+        tail = text_.split("## Red Flags", 1)[-1]
+        return len(re.findall(r"^- ", tail, re.M))
+
+    if rows(canon) != rows(compact):
+        errors.append(f"rationalization rows differ: canonical {rows(canon)} vs compact {rows(compact)}")
+    if flags(canon) != flags(compact):
+        errors.append(f"red flag count differs: canonical {flags(canon)} vs compact {flags(compact)}")
+    return errors
 
 
 def render_global(header: str) -> str:
@@ -71,6 +107,12 @@ def dir_drift(mirror: Path) -> list[str]:
 def main() -> None:
     check_only = "--check" in sys.argv
     problems: list[str] = []
+
+    parity = parity_errors()
+    if parity:
+        for p in parity:
+            print(f"PARITY: {p}")
+        sys.exit("FAIL: compact rendering out of parity with canonical - fix soul-compact.md first")
 
     for mirror in SKILL_MIRRORS:
         drifted = dir_drift(mirror)

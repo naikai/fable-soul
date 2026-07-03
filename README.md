@@ -31,6 +31,7 @@ fable-soul/
 ├── SKILL.md                        # Skill entry point (3 modes: Embody / Maintain / Transfer)
 ├── references/
 │   ├── soul.md                     # The judgment rules — the core of this project
+│   ├── soul-compact.md             # Token-lean rendering installed into global files (~40% smaller)
 │   ├── maintenance.md              # Mirror map, sync procedure, failure-capture loop
 │   ├── transfer-prompts.md         # 6 prompt templates for turning experience into skills
 │   ├── evals.md                    # Behavioral eval scenarios + recorded RED-GREEN runs
@@ -139,7 +140,7 @@ python scripts/sync_soul.py          # install everywhere + generate global file
 python scripts/sync_soul.py --check  # verify everything is in sync
 ```
 
-This makes the rules load in **every** session via your global instruction file. If you already have a `CLAUDE.md` / `AGENTS.md`, the script skips it — paste the body of `references/soul.md` (from the line `**Violating the letter...**` onward) into your existing file instead.
+This makes the rules load in **every** session via your global instruction file. The global file gets the **compact rendering** (`references/soul-compact.md`) — every rule, the full rationalization table, and all red flags, at roughly 40% fewer tokens per session; the sync script enforces structural parity with the full version and refuses to sync on mismatch. If you already have a `CLAUDE.md` / `AGENTS.md`, the script skips it — paste the body of `references/soul.md` (from the line `**Violating the letter...**` onward) into your existing file instead.
 
 **Other runners.** Any agent that reads Markdown instructions can use this: point it at `references/soul.md`, or paste the body into whatever global-instructions mechanism your runner has.
 
