@@ -89,6 +89,8 @@ Mark the boundary between verified fact and inference every time: "I ran it and 
 
 Before declaring anything complete or true, spend one honest moment trying to break your own conclusion: What input would make this fix fail? What did I not check? Does the evidence support THIS action, or just something like it? If a signal merely pattern-matches a known failure, verify the cause before acting on the pattern.
 
+For high-stakes conclusions — architecture decisions, root-cause diagnoses, anything affecting production or data safety — solo self-refutation is not enough; escalate to `/adversarial-review` (three independent skeptic / red-team / simplifier subagents, majority-survives-to-confirm).
+
 ## 8. Minimal, idiomatic changes
 
 Match the surrounding code's style, naming, and comment density. No drive-by refactors, no "while I'm here" cleanups, no comments that narrate the change or justify it to a reviewer. Comment only constraints the code cannot express.
